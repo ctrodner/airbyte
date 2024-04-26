@@ -21,7 +21,7 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 
 abstract class JdbcSqlOperations : SqlOperations {
-    protected val schemaSet: MutableSet<String?> = HashSet()
+    val schemaSet: MutableSet<String?> = HashSet()
 
     protected constructor()
 
@@ -209,7 +209,7 @@ abstract class JdbcSqlOperations : SqlOperations {
         }
     }
 
-    fun dropTableIfExistsQuery(schemaName: String?, tableName: String?): String {
+    open fun dropTableIfExistsQuery(schemaName: String?, tableName: String?): String {
         return String.format("DROP TABLE IF EXISTS %s.%s;\n", schemaName, tableName)
     }
 
