@@ -464,6 +464,9 @@ class BulkSalesforceStream(SalesforceStream):
                 else:
                     raise error
             job_id = "anything"
+            #job_id = job_info["id"]
+            if job_status != job_info["state"]:
+                self.logger.info(f"Job {self.name}/{job_id} status changed from {job_status} to {job_info['state']}")
             job_status = job_info["state"]
             if job_status in ["JobComplete", "Aborted", "Failed"]:
                 if job_status != "JobComplete":
