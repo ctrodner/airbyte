@@ -8,6 +8,7 @@ import io.airbyte.cdk.command.SourceConfiguration
 import io.airbyte.cdk.ssh.TunnelSession
 import io.airbyte.cdk.ssh.createTunnelSession
 import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.inject.Singleton
 import java.sql.Connection
 import java.sql.DriverManager
 import java.util.*
@@ -23,6 +24,7 @@ private val log = KotlinLogging.logger {}
  * The purpose of this object is to encapsulate and own an SSH tunnel session. If it exists, this
  * SSH tunnel session is shared by many connections.
  */
+@Singleton
 class JdbcConnectionFactory(val config: SourceConfiguration) : Supplier<Connection> {
 
     override fun get(): Connection {
