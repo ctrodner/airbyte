@@ -77,7 +77,7 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
   }
 
   @Override
-  protected List<JsonNode> dumpFinalTableRecords(String streamNamespace, final String streamName) throws Exception {
+  public List<JsonNode> dumpFinalTableRecords(String streamNamespace, final String streamName) throws Exception {
     if (streamNamespace == null) {
       streamNamespace = getDefaultSchema();
     }
@@ -115,7 +115,7 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
   }
 
   @Override
-  protected Map<String, String> getFinalMetadataColumnNames() {
+  public Map<String, String> getFinalMetadataColumnNames() {
     return FINAL_METADATA_COLUMN_NAMES;
   }
 
@@ -138,8 +138,8 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
               .withSyncMode(SyncMode.FULL_REFRESH)
               .withDestinationSyncMode(DestinationSyncMode.APPEND)
               .withStream(new AirbyteStream()
-                  .withNamespace(streamNamespace)
-                  .withName(streamName)
+                  .withNamespace(getStreamNamespace())
+                  .withName(getStreamName())
                   .withJsonSchema(SCHEMA))));
 
       // First sync
@@ -159,7 +159,7 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
       // manually drop the lowercased schema, since we no longer have the code to do it automatically
       // (the raw table is still in lowercase "airbyte_internal"."whatever", so the auto-cleanup code
       // handles it fine)
-      database.execute("DROP SCHEMA IF EXISTS \"" + streamNamespace + "\" CASCADE");
+      database.execute("DROP SCHEMA IF EXISTS \"" + getStreamNamespace() + "\" CASCADE");
     }
   }
 
@@ -171,8 +171,8 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
               .withSyncMode(SyncMode.FULL_REFRESH)
               .withDestinationSyncMode(DestinationSyncMode.OVERWRITE)
               .withStream(new AirbyteStream()
-                  .withNamespace(streamNamespace)
-                  .withName(streamName)
+                  .withNamespace(getStreamNamespace())
+                  .withName(getStreamName())
                   .withJsonSchema(SCHEMA))));
 
       // First sync
@@ -192,7 +192,7 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
       // manually drop the lowercased schema, since we no longer have the code to do it automatically
       // (the raw table is still in lowercase "airbyte_internal"."whatever", so the auto-cleanup code
       // handles it fine)
-      database.execute("DROP SCHEMA IF EXISTS \"" + streamNamespace + "\" CASCADE");
+      database.execute("DROP SCHEMA IF EXISTS \"" + getStreamNamespace() + "\" CASCADE");
     }
   }
 
@@ -204,8 +204,8 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
             .withDestinationSyncMode(DestinationSyncMode.APPEND_DEDUP)
             .withPrimaryKey(List.of(List.of("id1"), List.of("id2")))
             .withStream(new AirbyteStream()
-                .withNamespace(streamNamespace)
-                .withName(streamName)
+                .withNamespace(getStreamNamespace())
+                .withName(getStreamName())
                 .withJsonSchema(SCHEMA))));
 
     // First sync
@@ -218,7 +218,7 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
 
     // Second sync
     runSync(catalog, messages); // does not throw with latest version
-    assertEquals(1, dumpFinalTableRecords(streamNamespace, streamName).toArray().length);
+    assertEquals(1, dumpFinalTableRecords(getStreamNamespace(), getStreamName()).toArray().length);
   }
 
   @Test
@@ -230,8 +230,8 @@ public abstract class AbstractSnowflakeTypingDedupingTest extends BaseTypingDedu
             .withPrimaryKey(List.of(List.of("id1"), List.of("id2")))
             .withCursorField(List.of("updated_at"))
             .withStream(new AirbyteStream()
-                .withNamespace(streamNamespace)
-                .withName(streamName)
+                .withNamespace(getStreamNamespace())
+                .withName(getStreamName())
                 .withJsonSchema(SCHEMA))));
 
     // First sync

@@ -132,7 +132,7 @@ public class SnowflakeInternalStagingDestination extends AbstractJdbcDestination
   }
 
   @Override
-  protected JdbcSqlGenerator getSqlGenerator() {
+  protected JdbcSqlGenerator getSqlGenerator(final JsonNode config) {
     throw new UnsupportedOperationException("Snowflake does not yet use the native JDBC DV2 interface");
   }
 
@@ -209,7 +209,7 @@ public class SnowflakeInternalStagingDestination extends AbstractJdbcDestination
         typerDeduper,
         parsedCatalog,
         defaultNamespace,
-        true)
+        JavaBaseConstants.DestinationColumns.V2_WITHOUT_META)
         .setBufferMemoryLimit(Optional.of(getSnowflakeBufferMemoryLimit()))
         .setOptimalBatchSizeBytes(
             // The per stream size limit is following recommendations from:
